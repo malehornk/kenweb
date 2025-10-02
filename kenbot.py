@@ -28,7 +28,7 @@ def speak(text):
 
 # --- ASCII intro ---
 KENBOT_INTRO = """\
-KenBot SE - Coded by Kenneth Malehorn (with help from chatgpt)
+KenBot SE - Coded by Kenneth Malehorn 
                                                                 
                              @@@@@@@@@@@@                        
                      @@@@@@@@@@@@@@@@@@@@@@@                    
