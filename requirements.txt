@@ -1,4 +1,4 @@
 Flask==2.3.3
-torch==2.8.0+cpu -f https://download.pytorch.org/whl/torch_stable.html
+torch==2.8.0
 transformers==4.35.0
 pyttsx3==2.90
