@@ -1,6 +1,6 @@
 from flask import Flask, render_template, request, redirect, url_for, session, flash
 import json, os
-from kenbot import chat_with_bot  # import your KenBot module
+import requests
 
 app = Flask(__name__)
 app.secret_key = "kenhub_secret"
@@ -28,6 +28,18 @@ def save_entries(entries):
     with open(ENTRIES_FILE, "w") as f:
         json.dump(entries, f, indent=4)
 
+# --- Local KenBot API setup ---
+KENBOT_API_URL = "http://127.0.0.1:5001/chat"
+
+def chat_with_local_kenbot(message):
+    """Send message to local KenBot API and get reply."""
+    try:
+        response = requests.post(KENBOT_API_URL, json={"message": message})
+        return response.json().get("reply", "KenBot didn't respond.")
+    except Exception as e:
+        print(f"Error contacting local KenBot API: {e}")
+        return "KenBot is offline."
+
 # --- Routes ---
 @app.route("/")
 def home():
@@ -53,7 +65,7 @@ def send_win98():
         if text.lower().startswith("!kenbot "):
             query = text[8:].strip()
             chatrooms[room].append({"user": user, "text": query})
-            bot_reply = chat_with_bot(query)
+            bot_reply = chat_with_local_kenbot(query)
             chatrooms[room].append({"user": "KenBot", "text": bot_reply})
         else:
             chatrooms[room].append({"user": user, "text": text})
@@ -72,7 +84,7 @@ def kenbot_send():
     history = session.get("history", [])
     if user_input.strip():
         history.append({"user": "You", "text": user_input})
-        bot_reply = chat_with_bot(user_input)
+        bot_reply = chat_with_local_kenbot(user_input)  # <- uses local API
         history.append({"user": "KenBot", "text": bot_reply})
     session["history"] = history
     return redirect(url_for("kenbot_index"))
