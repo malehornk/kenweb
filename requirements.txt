@@ -1,4 +1,2 @@
-Flask
-gunicorn
-
-
+flask==2.3.6
+pyttsx3==2.90
